@@ -1,0 +1,114 @@
+body {
+  font: 14px "Century Gothic", Futura, sans-serif;
+  margin: 20px;
+}
+
+ol, ul {
+  padding-left: 30px;
+}
+
+.board-row:after {
+  clear: both;
+  content: "";
+  display: table;
+}
+
+.status {
+  margin-bottom: 10px;
+}
+
+.top-buffer {
+  margin-top:20px;
+}
+
+.square {
+  background: #fff;
+  border: 1px solid #999;
+  float: left;
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 34px;
+  height: 34px;
+  margin-right: -1px;
+  margin-top: -1px;
+  padding: 0;
+  text-align: center;
+  width: 34px;
+}
+
+.square:focus {
+  outline: none;
+}
+
+.kbd-navigation .square:focus {
+  background: #ddd;
+}
+
+.game {
+  display: flex;
+  flex-direction: row;
+}
+
+.game-info {
+  margin-left: 20px;
+}
+
+.inline {
+  display: inline-block;
+}
+
+.input-pad {
+  margin-right: 5px;
+}
+
+.zoom {
+    transition: transform .2s; /* Animation */
+}
+
+.zoom:hover {
+    transform: scale(1.05); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+}
+
+.box {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.box :hover {
+  background-color: blue; /* make this whatever you want */
+}
+
+.form-width {
+  width:500px;
+  text-align:center;
+}
+
+/*Fade out the particular DIV when user hover on that DIV*/
+div.highlight:hover{
+  background-color: blue; /* make this whatever you want */
+}
+
+h4 {
+  display: inline-block;
+}
+
+.bgimg {
+    background-image: url('./images/HouseAppBackground.jpeg');
+    background-repeat:no-repeat;
+    background-size:cover;
+    height:100vh;
+}
+
+.homeSearchBar {
+  left: 37%;
+}
+
+.gettingResultsHome {
+  font-size: 24px;
+  color: #f3ffe6;
+}
+
+.gettingResults {
+  font-size: 24px;
+}
