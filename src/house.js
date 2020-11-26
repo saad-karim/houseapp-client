@@ -8,13 +8,13 @@ export class House extends React.Component {
             street: this.props.info.street,
             city: this.props.info.city,
             state: this.props.info.state,
-            listPrice: this.props.info.listPrice,
+            listPrice: this.props.info.price,
             zEstimate: this.props.info.zEstimate,
             rentEstimate: this.props.info.rentEstimate,
-            equity: this.props.info.equity,
             imageURL: this.props.info.imgurl,
             houseURL: this.props.info.houseURL,
             sqft: this.props.info.sqft,
+            equity: this.props.info.equity,
             cashFlow: this.props.info.cashFlow,
         };
     }

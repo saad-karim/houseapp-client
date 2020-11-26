@@ -13,6 +13,8 @@ export class AllHouses extends React.Component {
         houses: [],
         displayHome: true,
         gettingResults: false,
+        messageForUser: "",
+        errorMessage: ""
       };
       this.handleSubmit = this.handleSubmit.bind(this)
   }
@@ -32,45 +34,94 @@ export class AllHouses extends React.Component {
   async handleSubmit(e, city, state) {
     e.preventDefault()
 
-    const houses = await this.mlsService(city, state)
-
-    let updated = []
-    for (let house of houses) {
-      const resp = await this.zillowService(house)
-
-      if (resp.equity) {
-        house['equity'] = resp.equity
-      }
-      if (resp.rentEstimate) {
-        house['rentEstimate'] = resp.rentEstimate
-      }
-      if (resp.zEstimate) {
-        house['zEstimate'] = resp.zEstimate
-      }
-      if (resp.houseURL) {
-        house['houseURL'] = resp.houseURL
-      }
-
-      updated.push(house)
-    }
+    this.errorMessage = ""
+    this.messageForUser = "Getting Results..."
 
     this.setState({
-      houses: updated,
       displayHome: false,
+    })
+
+    const houses = await this.mlsService(city, state)
+
+    // TODO: Rework to make these calls concurrently to improve performance
+    let updated = []
+    if (houses) {
+      if (!Array.isArray(houses)) {
+        return
+      }
+
+      for (let house of houses) {
+        const resp = await this.zillowService(house)
+        
+        if (!resp) {
+          continue
+        }
+
+        if (resp.equity) {
+          house['equity'] = resp.equity
+        }
+        if (resp.rentEstimate) {
+          house['rentEstimate'] = resp.rentEstimate
+        }
+        if (resp.zEstimate) {
+          house['zEstimate'] = resp.zEstimate
+        }
+        if (resp.houseURL) {
+          house['houseURL'] = resp.houseURL
+        }
+        if (resp.cashFlow) {
+          house['cashFlow'] = resp.cashFlow
+        }
+
+        updated.push(house)
+      }
+    }
+
+    this.messageForUser = ""
+    this.setState({
+      houses: updated,
     })
   }
 
   async mlsService(city, state) {
-    console.info(`Invoking MLS service for ${city}, ${state}`)
-    const resp = await MLSService.prototype.get(city, state)
-    console.log('mls resp: ', resp)
-    return resp
+    try {
+      const resp = await MLSService.prototype.get(city, state)
+      console.log('msp resp: ', resp)
+
+      if (resp.message) {
+        this.messageForUser = resp.message
+        this.setState({})
+      }
+
+      return resp
+    } catch (error) {
+      console.error('MLS service error: ', error.toString())
+      this.errorMessage = error.toString()
+      this.setState({
+        errorMessage: error.toString()
+      })
+    }
   }
 
   async zillowService(house) {
-    console.info('Invoking Zillow service for house', house)
-    const resp = await ZillowService.prototype.get(house)
-    return resp
+    try {
+      const resp = await ZillowService.prototype.get(house)
+
+      if (resp.message) {
+        this.messageForUser = resp.message
+        this.setState({
+          messageForUser: resp.message
+        })
+      }
+
+      return resp
+    } catch (error) {
+      console.error('Zillow service error: ', error.toString())
+      this.errorMessage = error.toString()
+      this.setState({
+        errorMessage: error.toString()
+      })
+    }
   }
 
   searchBar() {
@@ -93,7 +144,9 @@ export class AllHouses extends React.Component {
         </div>
         <div style={{"paddingTop": "50px", "margin": "0 auto", width: "40%"}}>
           <center>
-            {this.state.gettingResults ? <span className="gettingResults">Getting Results...</span> : null }
+            <span className="gettingResults">{this.messageForUser}</span>
+            <span className="gettingResults">{this.errorMessage}</span>
+            {/* {this.state.gettingResults ? <span className="gettingResults">Getting Results...</span> : null } */}
           </center>
         </div>
         <div className="container" style={{"paddingTop": "25px"}}>
