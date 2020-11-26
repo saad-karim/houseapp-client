@@ -116,7 +116,6 @@ export class AllHouses extends React.Component {
 
       return resp
     } catch (error) {
-      console.error('Zillow service error: ', error.toString())
       this.errorMessage = error.toString()
       this.setState({
         errorMessage: error.toString()
@@ -142,11 +141,10 @@ export class AllHouses extends React.Component {
             <Search onSubmit={this.handleSubmit}/> 
           </center>
         </div>
-        <div style={{"paddingTop": "50px", "margin": "0 auto", width: "40%"}}>
+        <div className="message">
           <center>
-            <span className="gettingResults">{this.messageForUser}</span>
-            <span className="gettingResults">{this.errorMessage}</span>
-            {/* {this.state.gettingResults ? <span className="gettingResults">Getting Results...</span> : null } */}
+            <span className="userMessage">{this.messageForUser}</span>
+            <span className="errMessage">{this.errorMessage}</span>
           </center>
         </div>
         <div className="container" style={{"paddingTop": "25px"}}>

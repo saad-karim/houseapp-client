@@ -109,6 +109,17 @@ h4 {
   color: #f3ffe6;
 }
 
-.gettingResults {
+.message {
+  padding-top: 50px;
+  width: 100%;
+}
+
+.userMessage {
   font-size: 24px;
+  color: black;
+}
+
+.errMessage {
+  font-size: 18px;
+  color: red;
 }

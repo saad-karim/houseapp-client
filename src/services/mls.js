@@ -14,7 +14,10 @@ export class MLSService extends React.Component {
       const data = (await response).json()
       if (!response.ok) {
         const error = (await data)
-        throw new Error(error.error)
+        if (error.error) {
+          throw new Error(error.error)
+        }
+        throw error
       }
 
       return data
