@@ -4,8 +4,14 @@ export class ZillowService extends React.Component {
   async get(house) {
     console.info('Zillow --- getting information for', house)
 
+    const host = process.env.REACT_APP_ZILLOW_SERVICE_GATEWAY
+    if (!host) {
+      throw new Error("Zillow service API gateway not specified")
+    }
+    console.info('Zillow service API gateway: ', host)
+
     try {
-      const response = await fetch(`https://2h9m1ne759.execute-api.us-east-1.amazonaws.com/dev/houses/state/${house.state}/city/${house.city}/street/${house.street}?listPrice=${house.price}`)
+      const response = await fetch(`https://${host}/zestimate/state/${house.state}/city/${house.city}/street/${house.street}?listPrice=${house.price}`)
       const data = (await response).json()
       if (!response.ok) {
         const error = (await data)

@@ -7,3 +7,7 @@ A simple client app written using React framework to help find investment proper
 ## Architecture (System Design)
 
 ![Design](./assets/images/architecture.png)
+
+## Platform
+
+Hosted on heroku: https://house-investing-app.herokuapp.com/
