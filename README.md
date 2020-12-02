@@ -8,6 +8,14 @@ A simple client app written using React framework to help find investment proper
 
 ![Design](./assets/images/architecture.png)
 
+## Security
+
+This client app authenticates with API gateway using IAM, an IAM user has been created for this app and associated to a policy that allows for invoking APIs. The client generates signed request, and adds the `Authorization` header.
+
+## Usage
+
+Enter city and state to search for properties.
+
 ## Platform
 
-Hosted on heroku: https://house-investing-app.herokuapp.com/
+Hosted on heroku: https://houseapp-client.herokuapp.com/
