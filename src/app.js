@@ -51,33 +51,37 @@ export class AllHouses extends React.Component {
       }
 
       for (let house of houses) {
-        const resp = await this.zillowService(house)
-        
-        if (!resp) {
-          continue
-        }
-
-        if (resp.equity) {
-          house['equity'] = resp.equity
-        }
-        if (resp.rentEstimate) {
-          house['rentEstimate'] = resp.rentEstimate
-        }
-        if (resp.zEstimate) {
-          house['zEstimate'] = resp.zEstimate
-        }
-        if (resp.houseURL) {
-          house['houseURL'] = resp.houseURL
-        }
-        if (resp.cashFlow) {
-          house['cashFlow'] = resp.cashFlow
-        }
-
-        updated.push(house)
+        this.zillow(house, updated)
       }
     }
 
     this.messageForUser = ""
+  }
+
+  async zillow(house, updated) {
+    const resp = await this.zillowService(house)
+
+    if (!resp) {
+      return
+    }
+
+    if (resp.equity) {
+      house['equity'] = resp.equity
+    }
+    if (resp.rentEstimate) {
+      house['rentEstimate'] = resp.rentEstimate
+    }
+    if (resp.zEstimate) {
+      house['zEstimate'] = resp.zEstimate
+    }
+    if (resp.houseURL) {
+      house['houseURL'] = resp.houseURL
+    }
+    if (resp.cashFlow) {
+      house['cashFlow'] = resp.cashFlow
+    }
+
+    updated.push(house)
     this.setState({
       houses: updated,
     })
