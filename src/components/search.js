@@ -24,7 +24,7 @@ export class Search extends React.Component {
 
   render() {
     return (
-      <div className="homeSearchBar">
+      <div>
         <div>
           <form className="navbar-form inline" onSubmit={(e) => this.onSubmit(e, this.state.city, this.state.state)}>
             <div className="form-group input-pad">
@@ -33,7 +33,7 @@ export class Search extends React.Component {
             <div className="form-group input-pad">
               <input className="form-control" placeholder="State" value={this.state.state} onChange={evt => this.updateStateInputValue(evt)} type="text" name="state" />
             </div>
-            <button type="submit" className="btn btn-primary btn-md">
+            <button type="submit" className="btn btn-primary btn-lg">
               Search
             </button>
           </form>

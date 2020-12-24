@@ -59,7 +59,7 @@ export class MLSService extends React.Component {
       return data
     } catch (error) {
       const e = error.toString()
-      throw new Error(`failed to get 'foo' MLS listing: ${e}`)
+      throw new Error(`failed to get MLS listing: ${e}`)
     }
   }
 }
