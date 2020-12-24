@@ -3,6 +3,7 @@ import House from './house'
 import Search from './components/search'
 import {MLSService} from './services/mls'
 import {ZillowService} from './services/zillow'
+import { DropdownButton, Dropdown } from 'react-bootstrap';
 import './index.css';
 import './css/bootstrap.min.css'
 
@@ -14,9 +15,13 @@ export class AllHouses extends React.Component {
         displayHome: true,
         gettingResults: false,
         messageForUser: "",
-        errorMessage: ""
+        errorMessage: "",
+        sortedAsc: false,
+        sortOn: 'zEstimate'
       };
       this.handleSubmit = this.handleSubmit.bind(this)
+      this.displaySortArrow = this.displaySortArrow.bind(this)
+      this.sort = this.sort.bind(this)
   }
 
   createHouse(house) {
@@ -43,7 +48,6 @@ export class AllHouses extends React.Component {
 
     const houses = await this.mlsService(city, state)
 
-    // TODO: Rework to make these calls concurrently to improve performance
     let updated = []
     if (houses) {
       if (!Array.isArray(houses)) {
@@ -55,7 +59,7 @@ export class AllHouses extends React.Component {
       }
     }
 
-    this.messageForUser = ""
+    this.messageForUser = null
   }
 
   async zillow(house, updated) {
@@ -83,7 +87,7 @@ export class AllHouses extends React.Component {
 
     updated.push(house)
     this.setState({
-      houses: updated,
+      houses: updated.sort((a, b) => (b.zEstimate - a.zEstimate)),
     })
   }
 
@@ -101,9 +105,7 @@ export class AllHouses extends React.Component {
     } catch (error) {
       console.error('MLS service error: ', error.toString())
       this.errorMessage = error.toString()
-      this.setState({
-        errorMessage: error.toString()
-      })
+      this.messageForUser = ""
     }
   }
 
@@ -121,8 +123,22 @@ export class AllHouses extends React.Component {
       return resp
     } catch (error) {
       this.errorMessage = error.toString()
+      this.messageForUser = ""
+    }
+  }
+
+  sort(key) {
+    if (this.state.sortedAsc) {
       this.setState({
-        errorMessage: error.toString()
+        sortedOn: key,
+        houses: this.state.houses.sort((a, b) => (b[key] - a[key])),
+        sortedAsc: false,
+      })
+    } else {
+      this.setState({
+        sortedOn: key,
+        houses: this.state.houses.sort((a, b) => (a[key] - b[key])),
+        sortedAsc: true,
       })
     }
   }
@@ -130,7 +146,7 @@ export class AllHouses extends React.Component {
   searchBar() {
     return (
       <div className="bgimg">
-        <div style={{"position": "absolute", "top": "50%", "left": "37%"}}>
+        <div className="homeSearchBar">
             <Search onSubmit={this.handleSubmit}/>
         </div>
       </div>
@@ -151,11 +167,36 @@ export class AllHouses extends React.Component {
             <span className="errMessage">{this.errorMessage}</span>
           </center>
         </div>
-        <div className="container" style={{"paddingTop": "25px"}}>
-              {this.createHouses(this.state.houses)}
+        {/* <div className="container" style={{"paddingTop": "25px"}}> */}
+        <div className="container">
+          <div className="sort">
+            <DropdownButton id="dropdown-basic-button" title="Sort">
+              <Dropdown.Item onClick={() => this.sort('zEstimate')}>zEstimate {this.displaySortArrow('zEstimate')}</Dropdown.Item>
+              <Dropdown.Item onClick={() => this.sort('cashFlow')}>Cash Flow {this.displaySortArrow('cashFlow')}</Dropdown.Item>
+              <Dropdown.Item onClick={() => this.sort('price')}>Price {this.displaySortArrow('price')}</Dropdown.Item>
+              <Dropdown.Item onClick={() => this.sort('equity')}>Equity {this.displaySortArrow('equity')}</Dropdown.Item>
+            </DropdownButton>
+          </div>
+          <div className="house-container">
+            {this.createHouses(this.state.houses)}
+          </div>
         </div>
       </div>
     )
+  }
+
+  displaySortArrow(key) {
+    if (key == this.state.sortedOn) {
+      if (this.state.sortedAsc) {
+        return (
+          <img className="sorted-arrow" src="up.png"></img>
+        )
+      } else {
+        return (
+          <img className="sorted-arrow" src="down.png"></img>
+        )
+      }
+    }
   }
 
   render() {
