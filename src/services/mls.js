@@ -3,12 +3,31 @@ import RequestSigner from 'aws4';
 
 export class MLSService extends React.Component {
 
-  async get(city, state) {
-    console.info(`MLSService --- Getting MLS listing for ${city}, ${state}`)
+  async get(queryParams) {
+    console.info(`MLSService --- Getting MLS listing for: ` + JSON.stringify(queryParams))
 
-    if ((city === "") || (state === "")) {
+    const city = queryParams.city
+    const state = queryParams.state
+
+    if ((!city) || (!state)) {
       throw new Error("City and State are required");
     } 
+
+    let price_min = 100000
+    let price_max = 250000
+    let sqft = 1200
+    
+    if (queryParams.filters) {
+      if (queryParams.filters.price_min) {
+        price_min = queryParams.filters.price_min
+      }
+      if (queryParams.filters.price_max) {
+        price_max = queryParams.filters.price_max
+      }
+      if (queryParams.filters.sqft) {
+        sqft = queryParams.filters.sqft
+      }
+    }
 
     const host = process.env.REACT_APP_MLS_SERVICE_GATEWAY
     if (!host) {
@@ -17,11 +36,14 @@ export class MLSService extends React.Component {
     console.info('MLS service API gateway: ', host)
 
     const stage = process.env.REACT_APP_STAGE
+    const uri = `${stage}/mls?city=${city}&state=${state}&price_min=${price_min}&price_max=${price_max}&sqft=${sqft}`
+    console.info('GET ', uri)
+
     const opts = {
       host: host,
       service: 'execute-api',
       region: 'us-east-1',
-      path: `/${stage}/mls?city=${city}&state=${state}`,
+      path: uri,
       method: 'GET',
     }
     RequestSigner.sign(opts, { accessKeyId: process.env.REACT_APP_AWS_ID, secretAccessKey: process.env.REACT_APP_AWS_SECRET })
@@ -32,7 +54,8 @@ export class MLSService extends React.Component {
     // 3. Path needs to be signed
 
     try {
-      const response = await fetch(`https://${host}/${stage}/mls?city=${city}&state=${state}`, {
+      // const response = await fetch(`https://${host}/${stage}/mls?city=${city}&state=${state}`, { // TODO: Catch authorization error
+      const response = await fetch(`https://${host}/${uri}`, {
         method: 'get',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',

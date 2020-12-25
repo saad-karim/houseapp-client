@@ -22,7 +22,9 @@ export class AllHouses extends React.Component {
       this.handleSubmit = this.handleSubmit.bind(this)
       this.displaySortArrow = this.displaySortArrow.bind(this)
       this.sort = this.sort.bind(this)
+      this.search = <Search onSubmit={this.handleSubmit}/>
   }
+
 
   createHouse(house) {
     return (
@@ -36,7 +38,7 @@ export class AllHouses extends React.Component {
     return houses.map(this.createHouse);
   }
 
-  async handleSubmit(e, city, state) {
+  async handleSubmit(e, queryParams) {
     e.preventDefault()
 
     this.errorMessage = ""
@@ -46,7 +48,7 @@ export class AllHouses extends React.Component {
       displayHome: false,
     })
 
-    const houses = await this.mlsService(city, state)
+    const houses = await this.mlsService(queryParams)
 
     let updated = []
     if (houses) {
@@ -147,7 +149,8 @@ export class AllHouses extends React.Component {
     return (
       <div className="bgimg">
         <div className="homeSearchBar">
-            <Search onSubmit={this.handleSubmit}/>
+          {this.search}
+          {/* <Search onSubmit={this.handleSubmit}/> */}
         </div>
       </div>
     )
@@ -158,7 +161,8 @@ export class AllHouses extends React.Component {
       <div>
         <div className="navbar navbar-inverse navbar-fixed-top">
           <center>
-            <Search onSubmit={this.handleSubmit}/> 
+            {this.search}
+            {/* <Search onSubmit={this.handleSubmit}/>  */}
           </center>
         </div>
         <div className="message">
@@ -167,7 +171,6 @@ export class AllHouses extends React.Component {
             <span className="errMessage">{this.errorMessage}</span>
           </center>
         </div>
-        {/* <div className="container" style={{"paddingTop": "25px"}}> */}
         <div className="container">
           <div className="sort">
             <DropdownButton id="dropdown-basic-button" title="Sort">
@@ -186,14 +189,14 @@ export class AllHouses extends React.Component {
   }
 
   displaySortArrow(key) {
-    if (key == this.state.sortedOn) {
+    if (key === this.state.sortedOn) {
       if (this.state.sortedAsc) {
         return (
-          <img className="sorted-arrow" src="up.png"></img>
+          <img className="sorted-arrow" src="up.png" alt=""></img>
         )
       } else {
         return (
-          <img className="sorted-arrow" src="down.png"></img>
+          <img className="sorted-arrow" src="down.png" alt=""></img>
         )
       }
     }
