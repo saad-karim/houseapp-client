@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dropdown, DropdownButton } from 'react-bootstrap';
+import { Dropdown } from 'react-bootstrap';
 
 export class Search extends React.Component {
   constructor(props) {

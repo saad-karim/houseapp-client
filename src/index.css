@@ -153,6 +153,7 @@ h4 {
   float: right;
   padding-left: .5rem;
   padding-top: .1rem;
+  font-size: 1.3rem;
 }
 
 .filter-menu-container {
@@ -163,4 +164,11 @@ h4 {
 
 .filter-item {
   padding: 5px;
+}
+
+.dropdown-menu.show {
+  padding-top: 1px;
+  border: 1px solid;
+  border-radius: 15px;
+  box-shadow: 5px 5px 10px #888888;
 }
