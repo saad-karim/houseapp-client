@@ -15,7 +15,3 @@ This client app authenticates with API gateway using IAM, an IAM user has been c
 ## Usage
 
 Enter city and state to search for properties.
-
-## Platform
-
-Hosted on heroku: https://houseapp-client.herokuapp.com/
