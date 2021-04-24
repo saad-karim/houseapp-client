@@ -13,6 +13,7 @@ export class MLSService extends React.Component {
       throw new Error("City and State are required");
     } 
 
+    const stage = process.env.REACT_APP_STAGE
     let uri = `${stage}/mls?city=${city}&state=${state}`
     
     if (queryParams.filters) {
@@ -30,7 +31,6 @@ export class MLSService extends React.Component {
       }
     }
 
-    const stage = process.env.REACT_APP_STAGE
     console.info('GET ', uri)
 
     const host = process.env.REACT_APP_MLS_SERVICE_GATEWAY
