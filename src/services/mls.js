@@ -13,31 +13,31 @@ export class MLSService extends React.Component {
       throw new Error("City and State are required");
     } 
 
-    let price_min = 100000
-    let price_max = 250000
-    let sqft = 1200
+    let uri = `${stage}/mls?city=${city}&state=${state}`
     
     if (queryParams.filters) {
       if (queryParams.filters.price_min) {
-        price_min = queryParams.filters.price_min
+        const price_min = queryParams.filters.price_min
+        uri = uri + `&price_min=${price_min}`
       }
       if (queryParams.filters.price_max) {
-        price_max = queryParams.filters.price_max
+        const price_max = queryParams.filters.price_max
+        uri = uri + `&price_max=${price_max}`
       }
       if (queryParams.filters.sqft) {
-        sqft = queryParams.filters.sqft
+        const sqft = queryParams.filters.sqft
+        uri = uri + `&sqft=${sqft}`
       }
     }
+
+    const stage = process.env.REACT_APP_STAGE
+    console.info('GET ', uri)
 
     const host = process.env.REACT_APP_MLS_SERVICE_GATEWAY
     if (!host) {
       throw new Error("MLS service API gateway not specified")
     }
     console.info('MLS service API gateway: ', host)
-
-    const stage = process.env.REACT_APP_STAGE
-    const uri = `${stage}/mls?city=${city}&state=${state}&price_min=${price_min}&price_max=${price_max}&sqft=${sqft}`
-    console.info('GET ', uri)
 
     const opts = {
       host: host,
